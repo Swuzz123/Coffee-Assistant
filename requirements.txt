@@ -12,3 +12,4 @@ ipykernel
 streamlit
 numpy
 fastapi
+uvicorn

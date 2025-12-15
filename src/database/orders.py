@@ -2,7 +2,7 @@
 from .connection import Orders
 from .connection import get_db_connection
 
-# ==================== CRUD: Order ====================
+# ================================ CRUD: Order =================================
 def initOrder():
   try:
     with get_db_connection() as conn:
@@ -22,7 +22,8 @@ def initOrder():
         print("Successfully create Orders table!")
   except Exception as e:
     print(f"Cannot create Orders table, reason: {e}")
-    
+
+# ------------------------------------------------------------------------------ 
 def insertOrder(orders: Orders) -> int:
   try:
     with get_db_connection() as conn:
@@ -48,7 +49,8 @@ def insertOrder(orders: Orders) -> int:
   except Exception as e:
     print(f"Cannot insert order {id}, reason: {e}")
     raise
-  
+
+# ------------------------------------------------------------------------------  
 def updateOrderStatus(order_id: int, new_status: str) -> None:
   try:
     with get_db_connection() as conn:
@@ -63,6 +65,7 @@ def updateOrderStatus(order_id: int, new_status: str) -> None:
     print(f"Cannot update order status, reason: {e}")
     raise
 
+# ------------------------------------------------------------------------------ 
 def getOrderStatus(order_id: int) -> dict | None:
   try:
     with get_db_connection() as conn:

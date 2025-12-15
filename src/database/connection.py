@@ -9,7 +9,7 @@ from pydantic import BaseModel, Field
 
 load_dotenv()
 
-# ================== Connect to Database ==================
+# ============================= Connect to Database ============================
 DSN = os.getenv("DATABASE_URL")
 
 @contextmanager
@@ -20,7 +20,7 @@ def get_db_connection():
   finally:
     conn.close()
 
-# ================== Setup ORM types ==================
+# ============================== Setup ORM types ===============================
 class MenuItems(BaseModel):
   id:                  Optional[int] = None
   title:               str

@@ -2,7 +2,7 @@
 from .connection import OrderItems
 from .connection import get_db_connection
 
-# ==================== CRUD: Order Items ====================
+# ============================== CRUD: Order Items =============================
 def initOrderItems():
   try:
     with get_db_connection() as conn:
@@ -22,7 +22,8 @@ def initOrderItems():
         print("Successfully create Order Items table!")
   except Exception as e:
     print(f"Cannot create Order Items table, reason: {e}")
-    
+
+# ------------------------------------------------------------------------------ 
 def insertOrderItem(item: OrderItems) -> None:
   try:
     with get_db_connection() as conn:

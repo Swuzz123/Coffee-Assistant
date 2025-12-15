@@ -10,7 +10,7 @@ from src.database.order_items import insertOrderItem
 from src.database.orders import insertOrder, updateOrderStatus, getOrderStatus
 from src.database.menu_items import getExactItem, getTopItemsFromSub, getTopItemsFromMain, getMenuItemsByTitle
 
-# ================== TOOLS USAGE ==================
+# ================================ TOOLS USAGE =================================
 @tool
 def hand_customer_query(query: str) -> list[str]:
   """
@@ -189,6 +189,7 @@ def cancel_order(order_id: int) -> str:
   except Exception as e:
     return f"Lỗi khi hủy đơn: {str(e)}"
   
+# =============================== TOOLS PACKAGE ================================
 tools = [hand_customer_query, place_order, get_order_status, cancel_order]
   
 

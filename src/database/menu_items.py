@@ -3,7 +3,7 @@ import pandas as pd
 from typing import List, Dict
 from .connection import get_db_connection
 
-# ==================== CRUD: Menu Items ====================
+# ============================== CRUD: Menu Items ==============================
 def initMenuItems():
   try:
     with get_db_connection() as conn:
@@ -25,7 +25,8 @@ def initMenuItems():
         print("Successfully create Menu Items table!")
   except Exception as e:
     print(f"Cannot create Menu Items table, reason: {e}")
-    
+  
+# ------------------------------------------------------------------------------ 
 def insertItems(data_path: str):
   try:
     df = pd.read_csv(data_path)
@@ -52,7 +53,8 @@ def insertItems(data_path: str):
     print("Insert values successfully!")
   except Exception as e:
     print(f"Cannot insert values, reason: {e}")
-  
+    
+# ------------------------------------------------------------------------------
 def fetchMenuItems():
   try:
     with get_db_connection() as conn:
@@ -72,7 +74,8 @@ def fetchMenuItems():
   except Exception as e:
     print(f"Cannot read the values, reason: {e}")
     return []
-  
+
+# ------------------------------------------------------------------------------ 
 def getExactItem(item_name):
   """Return exact information of an item by its name"""
   try:
@@ -81,7 +84,7 @@ def getExactItem(item_name):
         cur.execute(
           """
           SELECT
-            title, price, description
+            title, price, description, image_url
           FROM menu_items
           WHERE title = %s
           """, (item_name,)
@@ -90,7 +93,8 @@ def getExactItem(item_name):
         return list(row)
   except Exception as e:
     return [f"Error: {e}", 0, ""]
-  
+
+# ---------------------------------------------------------------------------- 
 def getSubCategories(main_cat):
   """Return exact information of an item by its name"""
   try:
@@ -108,7 +112,8 @@ def getSubCategories(main_cat):
         return [r[0] for r in rows if r[0] is not None]
   except Exception as e:
     return [f"Error: {e}"]
-  
+
+# ------------------------------------------------------------------------------  
 def getTopItemsFromMain(main_cat):
   """Recommend top 5 items from main category if it has no subcategories"""
   try:
@@ -130,7 +135,7 @@ def getTopItemsFromMain(main_cat):
           cur.execute(
             """
             SELECT 
-              title, price, description
+              title, price, description, image_url
             FROM menu_items
             WHERE main_category = %s
             ORDER BY RANDOM()
@@ -145,7 +150,8 @@ def getTopItemsFromMain(main_cat):
           return getSubCategories(main_cat)
   except Exception as e:
     return [(f"Error: {e}", 0, "")]
-  
+
+# ------------------------------------------------------------------------------
 def getTopItemsFromSub(sub_cat):
   """Recommend top 5 items from sub category"""
   try:
@@ -153,7 +159,7 @@ def getTopItemsFromSub(sub_cat):
         with conn.cursor() as cur:
           cur.execute(
             """
-            SELECT title, price, description
+            SELECT title, price, description, image_url
             FROM menu_items
             WHERE sub_category = %s
             ORDER BY RANDOM()
@@ -165,7 +171,8 @@ def getTopItemsFromSub(sub_cat):
           return rows
   except Exception as e:
     return [(f"Error: {e}", 0, "")]
-  
+
+# ------------------------------------------------------------------------------ 
 def getMenuItemsByTitle(item_name: str) -> List[Dict]:
   try:
     with get_db_connection() as conn:
