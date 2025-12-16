@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 class SessionManager:
   """
-  Manage sessions for all conservations
+  Manage sessions for all conversations
   Purpose in there is for demo so just using in-memory dict 
   """
   def __init__(self, ttl_minutes: int = 60):
@@ -24,7 +24,7 @@ class SessionManager:
     
     # Create new customer_id if not exist
     if not customer_id:
-      customer_id = f"CUST_{str(uuid.uuid4().hex()[:8].upper())}"
+      customer_id = f"CUST_{str(uuid.uuid4().hex[:8].upper())}"
       
     self.sessions[session_id] = {
       "customer_id": customer_id,

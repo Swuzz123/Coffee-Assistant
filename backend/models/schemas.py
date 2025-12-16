@@ -4,7 +4,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional 
 
-# ======================== INITIALIZE CONTEXT AND STATE ========================
+# =========================== SESSION INITIALIZATION ===========================
 class ChatStartRequest(BaseModel):
   """Request to start a new session"""
   customer_id: Optional[str] = None
@@ -23,7 +23,7 @@ class ChatStartResponse(BaseModel):
   message:      str
   timestamp:    datetime
 
-# ================= INITIALIZE REQUEST AND RESPONSE FROM USER ==================
+# ========================== CHAT MESSAGE INTERACTION ==========================
 class ChatMessageRequest(BaseModel):
   """Request to send message from user"""
   session_id:   str = Field(..., description="Session ID recieved from /chat/start")
@@ -48,7 +48,7 @@ class ChatHistoryResponse(BaseModel):
   """Response to return chat history"""
   session_id:   str
   customer_id:  str
-  message:      List[Dict[str, Any]]
+  messages:      List[Dict[str, Any]]
   
 class ErrorResponse(BaseModel):
   """Reponse when having an error"""
