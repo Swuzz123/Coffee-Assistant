@@ -8,7 +8,7 @@ API_KEY = os.getenv("GOOGLE_API_KEY")
 def initModelLLM():
   try:
     model = ChatGoogleGenerativeAI(
-      model='gemini-2.0-flash',
+      model='gemini-2.5-flash',
       google_api_key=API_KEY
     )
     return model

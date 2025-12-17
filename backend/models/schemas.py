@@ -1,5 +1,4 @@
 # backend/models/schemas.py
-import json
 from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional 

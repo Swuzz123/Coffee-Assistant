@@ -5,6 +5,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from src.agent.graph import create_agent
 from backend.services.session import SessionManager
+from backend.services.process_content import normalize_ai_content
 from backend.models.schemas import (
   ChatStartRequest,
   ChatStartResponse,
@@ -111,7 +112,10 @@ async def send_messsage(request: ChatMessageRequest):
     
     # Get last response
     last_message = result["messages"][-1]
-    response_text = last_message.content
+    response_text = normalize_ai_content(last_message.content)
+    
+    print(f"Last message: {last_message}")
+    print(f"Response text: {response_text}")
     
     # Extract tool calls info (for debugging)
     tool_calls_info = None
@@ -123,7 +127,9 @@ async def send_messsage(request: ChatMessageRequest):
         }
         for tc in last_message.tool_calls
       ]
-      
+    
+    print(f"Tool calls: {tool_calls_info}")
+    
     return ChatMessageResponse(
       session_id=request.session_id,
       message=response_text,
@@ -191,10 +197,26 @@ async def get_history(session_id: str):
     
 # ------------------------------------------------------------------------------
 @router.delete(
-  "/clear/{session_id}",
+  "/session/{session_id}",
   response_model=ErrorResponse,
   summary="Clear expired session",
-  description="Clear all expired session"
+  description="Clear all expired session and conversation history"
 )
 async def clear_session(session_id: str):
-  pass
+  """Endpoint to delete session"""
+  try:
+    if session_id in session_manager.sessions:
+      del session_manager.sessions[session_id]
+      return {"message": f"Session {session_id} deleted"}
+    else:
+      raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Session not found"
+      )
+  except HTTPException:
+    raise
+  except Exception as e:
+    raise HTTPException(
+      status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+      detail=str(e)
+    )

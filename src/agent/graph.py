@@ -29,7 +29,7 @@ def create_agent():
       output = llm_with_tools.invoke(msgs)
       
       if hasattr(output, "tool_calls") and output.tool_calls:
-        print(f"   Tool calls: {len(output.tool_calls)}")
+        print(f"Tool calls: {len(output.tool_calls)}")
       
     else:
       output = AIMessage(content=WELCOME_MSG)
@@ -41,7 +41,7 @@ def create_agent():
     last = state["messages"][-1]
     
     if hasattr(last, "tool_calls") and last.tool_calls:
-      print(f"   Tool calls: {len(last.tool_calls)}")
+      print(f"Tool calls: {len(last.tool_calls)}")
       return "tools"
     else:
       return "end"
