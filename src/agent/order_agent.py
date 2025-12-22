@@ -3,18 +3,19 @@ from typing import List, Literal
 
 from .tools import tools
 from .state import OrderState
-from .utils import initModelLLM, SYSTEM_PROMPT, WELCOME_MSG
+from .prompt import SYSTEM_PROMPT, WELCOME_MSG
+from src.utils.llm_manager import LLMOrchestrator
 
 from langgraph.prebuilt import ToolNode
 from langgraph.graph import START, END, StateGraph
-from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import SystemMessage, AIMessage
 
 class OrderAgent:
   def __init__(self, tools: List = tools):
     self.tools = tools
     self.tool_node = ToolNode(tools)
-    self.llm_with_tools = initModelLLM().bind_tools(tools)
+    self.llm_orchestator = LLMOrchestrator()
+    self.llm_with_tools = self.llm_orchestator.get_llm()
     self.graph = self._build_graph()
     
   # ============================== NODE FUNCTIONS ==============================
@@ -59,10 +60,8 @@ class OrderAgent:
         "end": END,
       },
     )
-    
-    checkpointer = MemorySaver()
-    
-    agent = builder.compile(checkpointer=checkpointer)
+        
+    agent = builder.compile()
     return agent
   
   def get_graph(self):

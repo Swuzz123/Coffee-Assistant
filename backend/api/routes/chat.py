@@ -1,12 +1,12 @@
-# backend/models/chat.py
+# backend/api/routes/chat.py
 from datetime import datetime
 from langchain_core.messages import HumanMessage
 from fastapi import APIRouter, HTTPException, status
 
 from src.agent.graph import create_agent
-from backend.services.session import SessionManager
-from backend.services.process_content import normalize_ai_content
-from backend.models.schemas import (
+from backend.api.services.session import SessionManager
+from backend.api.services.process_content import normalize_ai_content
+from backend.api.models.schemas import (
   ChatStartRequest,
   ChatStartResponse,
   ChatMessageRequest, 

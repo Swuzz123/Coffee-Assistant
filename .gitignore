@@ -6,7 +6,6 @@ __pycache__/
 *.pyo
 
 /app
-/api
 /volumes
 raw.txt
 

@@ -3,7 +3,8 @@ from typing import Literal
 
 from .tools import tools
 from .state import OrderState
-from .utils import initModelLLM, SYSTEM_PROMPT, WELCOME_MSG
+from .prompt import SYSTEM_PROMPT, WELCOME_MSG
+from src.utils.llm_manager import LLMOrchestrator
 
 from langgraph.prebuilt import ToolNode
 from langgraph.graph import START, END, StateGraph
@@ -14,7 +15,8 @@ def create_agent():
   
   # ========================== INITIALIZE COMPONENTS ===========================
   tool_node = ToolNode(tools)
-  llm_with_tools = initModelLLM().bind_tools(tools)
+  llm_orchestrator = LLMOrchestrator()
+  llm_with_tools = llm_orchestrator.get_llm().bind_tools(tools)
   
   # ============================== NODE FUNCTIONS ==============================
   def chat_node(state: OrderState) -> OrderState:

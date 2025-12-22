@@ -23,8 +23,16 @@ services:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
       - postgres
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./volumes/ollama:/root/.ollama
       
 volumes:
   postgres_data:
   pgadmin_data:
-    
+  ollama:  

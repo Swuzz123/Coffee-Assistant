@@ -3,17 +3,62 @@ import re
 import unicodedata
 
 class QueryClassifier:
+  """
+  Classifies customer queries into menu-related intents for a coffee shop
+  assistant, supporting Vietnamese and English inputs.
+
+  The classifier detects whether a query refers to:
+  - a specific menu item
+  - a sub-category
+  - a main category
+  - or an unknown intent
+
+  Matching is accent-insensitive and case-insensitive to ensure robust
+  handling of natural language queries.
+  """
   def __init__(self, mappings):
+    """
+    Initialize the QueryClassifier with menu mappings.
+    
+    Args:
+      mappings(dict): A hierarchical menu structure in the form:
+                      {
+                        "Main Category": {
+                          "Sub Category": ["Item 1", "Item 2", ...]
+                        }
+                      }
+    """
     self.mappings = mappings
     self.main_cats, self.sub_cats, self.items = self.build_lookup_tables()
-    
+  
+  # ----------------------------------------------------------------------------
   def normalize_text(self, text):
+    """
+    Normalize text by removing Vietnamese accents, converting to lowercase,
+    and trimming whitespace.
+
+    This enables accent-insensitive and case-insensitive matching.
+
+    Args: 
+      text(str): Input text to normalize.
+
+    Returns:
+      str: Normalized text.
+    """
     # Convert Vietnamese to accent-free + lowercase for robust matching
     text = unicodedata.normalize('NFD', text)
     text = ''.join(ch for ch in text if unicodedata.category(ch) != 'Mn')
     return text.lower().strip()
 
+  # ----------------------------------------------------------------------------
   def build_lookup_tables(self):
+    """
+    Extract and cache all main categories, sub-categories, and items from the 
+    menu mappings.
+
+    Returns:
+      tuple: A tuple of sets (main_categories, sub_categories, items).
+    """
     main_cats, sub_cats, items = set(), set(), set()
     for main_cat, subs in self.mappings.items():
       main_cats.add(main_cat)
@@ -24,7 +69,26 @@ class QueryClassifier:
           items.add(drink)
     return main_cats, sub_cats, items
 
+  # ----------------------------------------------------------------------------
   def classify_query(self, query):
+    """
+    Classify a user query into the most specific menu-related intent.
+
+    Matching priority:
+    1. Item
+    2. Sub-category
+    3. Main category
+
+    Args:
+      query(str): User input query.
+
+    Returns:
+      dict: Classification result with the following structure:
+            {
+              "type": "item" | "sub_category" | "main_category" | "unknown",
+              "keyword": str | None
+            }
+    """
     query_norm = self.normalize_text(query)
 
     # Normalize all names for comparison
@@ -48,3 +112,8 @@ class QueryClassifier:
         return {"type": "main_category", "keyword": original}
 
     return {"type": "unknown", "keyword": None}
+
+# # TODO: Implement rotate key mechanism and check status code to have key to use when exhausted
+# class APIKeyManager:
+#   def __init__(self):
+#     pass

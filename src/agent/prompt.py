@@ -1,22 +1,4 @@
-# agent/utils.py
-import os
-from langchain_google_genai import ChatGoogleGenerativeAI
-
-# ============================ INITIALIZE LLM MODEL ===========================
-API_KEY = os.getenv("GOOGLE_API_KEY")
-
-def initModelLLM():
-  try:
-    model = ChatGoogleGenerativeAI(
-      model='gemini-2.5-flash',
-      google_api_key=API_KEY
-    )
-    return model
-  except Exception as e:
-    print(f"Cannot load model, reason: {e}")
-    return None
-
-# ================================= PROMPTING =================================
+# agent/prompt.py
 SYSTEM_PROMPT = """
 You are a friendly, intelligent, and professional staff member at the most famous and luxurious coffee shop, MT Coffee Shop.
 

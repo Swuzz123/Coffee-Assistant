@@ -1,4 +1,4 @@
-# backend/services/process_content.py
+# backend/api/services/process_content.py
 def normalize_ai_content(content) -> str:
   if isinstance(content, str):
     return content

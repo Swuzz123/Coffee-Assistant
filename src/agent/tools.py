@@ -32,7 +32,8 @@ def hand_customer_query(query: str) -> list[str]:
 
   else:
     return ["Tôi chưa hiểu bạn muốn uống gì. Bạn có thể mô tả rõ hơn không?"]
-  
+
+# ------------------------------------------------------------------------------ 
 @tool 
 def place_order(customer_id: str, items: List[Dict]) -> str:
   """
@@ -132,7 +133,8 @@ def place_order(customer_id: str, items: List[Dict]) -> str:
     import traceback
     traceback.print_exc()
     return f"Có lỗi xảy ra khi đặt hàng: {str(e)}"
-  
+
+# ------------------------------------------------------------------------------ 
 @tool
 def get_order_status(order_id: int) -> str:
   """
@@ -162,6 +164,7 @@ def get_order_status(order_id: int) -> str:
                Trạng thái: {status_vn}
                Tổng tiền: {order['total_price']:,.0f} VND"""
 
+# ------------------------------------------------------------------------------ 
 @tool
 def cancel_order(order_id: int) -> str:
   """

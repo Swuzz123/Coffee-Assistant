@@ -1,4 +1,4 @@
-# backend/models/session.py
+# backend/api/services/session.py
 import uuid
 from typing import Dict, Optional
 from datetime import datetime, timedelta
