@@ -10,6 +10,12 @@ services:
       - "5432:5432"
     volumes:
       - ./volumes/postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   pgadmin:
     image: dpage/pgadmin4
@@ -31,7 +37,40 @@ services:
       - "11434:11434"
     volumes:
       - ./volumes/ollama:/root/.ollama
-      
+  
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: coffee-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./src:/app/src
+    env_file: 
+      - .env
+    restart: unless-stopped
+    command: uvicorn backend.run_api:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: coffee-frontend
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    environment:
+      - API_BASE_URL=http://backend:8000
+    restart: unless-stopped
+
 volumes:
   postgres_data:
   pgadmin_data:

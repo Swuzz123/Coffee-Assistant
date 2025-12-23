@@ -1,15 +1,8 @@
 # database/ingestion.py
-from .menu_items import initMenuItems, insertItems
-from .order_items import initOrderItems
-from .orders import initOrder
+from .menu_items import insertItems
 
-def ingest_data(file_path: str):
+def run_ingestion():
   
-  # Create Menu Items table and Insert data
-  initMenuItems()
-  insertItems(file_path)
-  
-  # Create Order and Order Items tables
-  initOrder()
-  initOrderItems()
+  csv_path = "/app/data/coffee_house_data.csv" 
+  insertItems(csv_path)
     

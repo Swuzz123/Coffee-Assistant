@@ -4,35 +4,18 @@ from typing import List, Dict
 from .connection import get_db_connection
 
 # ============================== CRUD: Menu Items ==============================
-def initMenuItems():
-  try:
-    with get_db_connection() as conn:
-      with conn.cursor() as cur:
-        cur.execute(
-          """
-          CREATE TABLE IF NOT EXISTS menu_items (
-            id              SERIAL PRIMARY KEY,
-            title           VARCHAR(255) NOT NULL,
-            price           NUMERIC(10, 2) NOT NULL,
-            image_url       TEXT,
-            description     TEXT,
-            main_category   VARCHAR(100) NOT NULL,
-            sub_category    VARCHAR(100)
-          )
-          """
-        )
-        conn.commit()
-        print("Successfully create Menu Items table!")
-  except Exception as e:
-    print(f"Cannot create Menu Items table, reason: {e}")
-  
-# ------------------------------------------------------------------------------ 
 def insertItems(data_path: str):
   try:
-    df = pd.read_csv(data_path)
-    
     with get_db_connection() as conn:
       with conn.cursor() as cur:
+        # Check data existed or not
+        cur.execute("SELECT COUNT(*) FROM menu_items")
+        if cur.fetchone()[0] > 0:
+          print("Data already exists in menu_items. Skipping ingestion.")
+          return
+        
+        # If data not existed -> ingest data into db
+        df = pd.read_csv(data_path)
         for _, row in df.iterrows():
           cur.execute(
             """
